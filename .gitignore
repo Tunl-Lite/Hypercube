@@ -1,0 +1,88 @@
+# Virtual environments
+muse_env/
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Python compiled bytecode & caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Python packaging & distribution
+build/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Testing, type checking, and linters
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+
+# Environment variables & local configuration
+.env
+.env.local
+.env.*.local
+*.env
+
+# Logs and runtime files
+*.log
+server.log
+*.pid
+
+# Data and EEG recording exports
+data/
+recordings/
+
+# IDE and Editor settings
+.vscode/*
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# OS metadata
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+
+# Linux
+.directory
+.Trash-*
+

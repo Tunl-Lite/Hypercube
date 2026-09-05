@@ -1,0 +1,721 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    color: #fff;
+}
+
+.canvas-container {
+    --ui-scale: 1;
+    position: relative;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    background-color: #000;
+}
+
+canvas {
+    display: block;
+    border-radius: 8px;
+}
+
+#eegIndicator {
+    position: fixed;
+    top: calc(120px * var(--ui-scale));
+    left: calc(20px * var(--ui-scale));
+    display: flex;
+    flex-direction: column;
+    gap: calc(8px * var(--ui-scale));
+    z-index: 10;
+    transition: opacity 0.3s ease;
+    user-select: none;
+}
+
+.eeg-band {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: calc(20px * var(--ui-scale));
+    color: rgba(255, 0, 0, 0.55);
+    font-size: calc(14px * var(--ui-scale));
+    font-weight: 600;
+    transition: none;
+}
+
+.eeg-band .marker {
+    position: absolute;
+    left: 0;
+    font-size: calc(12px * var(--ui-scale));
+    opacity: 0;
+    visibility: hidden;
+    transition: none;
+}
+
+.eeg-band .symbol {
+    font-family: 'Inter', sans-serif;
+    font-size: inherit;
+    font-weight: inherit;
+    width: calc(18px * var(--ui-scale));
+    display: inline-block;
+    text-align: center;
+    margin-right: calc(10px * var(--ui-scale));
+}
+
+.eeg-band .range {
+    font-family: 'Inter', sans-serif;
+    font-size: inherit;
+    font-weight: inherit;
+    opacity: 0.85;
+}
+
+.eeg-band.active {
+    color: #ff1111;
+}
+
+.eeg-band.active .marker {
+    opacity: 1;
+    visibility: visible;
+}
+
+#angleDisplay {
+    position: fixed;
+    bottom: calc(15px * var(--ui-scale));
+    right: calc(20px * var(--ui-scale));
+    color: #ff3333;
+    font-size: calc(20px * var(--ui-scale));
+    font-weight: 600;
+    user-select: none;
+}
+
+#frequencyDisplay {
+    position: fixed;
+    bottom: calc(15px * var(--ui-scale));
+    left: calc(20px * var(--ui-scale));
+    color: #ff3333;
+    font-size: calc(14px * var(--ui-scale));
+    font-weight: 600;
+    user-select: none;
+}
+
+#audioControl {
+    position: fixed;
+    bottom: calc(45px * var(--ui-scale));
+    left: calc(20px * var(--ui-scale));
+    display: flex;
+    align-items: center;
+    gap: calc(8px * var(--ui-scale));
+    color: rgba(255, 0, 0, 0.55);
+    font-size: calc(14px * var(--ui-scale));
+    font-weight: 600;
+    user-select: none;
+}
+
+#audioToggle {
+    appearance: none;
+    -webkit-appearance: none;
+    width: calc(16px * var(--ui-scale));
+    height: calc(16px * var(--ui-scale));
+    border: calc(2px * var(--ui-scale)) solid rgba(255, 0, 0, 0.55);
+    border-radius: calc(3px * var(--ui-scale));
+    background-color: #000;
+    cursor: pointer;
+    position: relative;
+    outline: none;
+    margin: 0;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+#audioToggle:checked {
+    border-color: #ff3333;
+    background-color: #ff3333;
+}
+
+#audioToggle:checked::after {
+    content: '';
+    position: absolute;
+    width: calc(4px * var(--ui-scale));
+    height: calc(8px * var(--ui-scale));
+    border: solid black;
+    border-width: 0 calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)) 0;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+#audioControl label {
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+#audioToggle:checked + label {
+    color: #ff3333;
+}
+
+#angleDisplay, #frequencyDisplay, #audioControl {
+    transition: opacity 0.3s ease;
+}
+
+.ui-toggle {
+    position: fixed;
+    cursor: pointer;
+    z-index: 100;
+}
+
+/* Expand clickable area */
+.ui-toggle::after {
+    content: '';
+    position: absolute;
+    top: calc(-19px * var(--ui-scale));
+    left: calc(-19px * var(--ui-scale));
+    width: calc(50px * var(--ui-scale));
+    height: calc(50px * var(--ui-scale));
+}
+
+.toggle-top-left {
+    left: 0;
+    top: 0;
+    width: 0; 
+    height: 0; 
+    border-top: calc(12px * var(--ui-scale)) solid #ff0000;
+    border-right: calc(12px * var(--ui-scale)) solid transparent;
+}
+
+.toggle-left {
+    left: 0;
+    bottom: 0;
+    width: 0; 
+    height: 0; 
+    border-bottom: calc(12px * var(--ui-scale)) solid #ff0000;
+    border-right: calc(12px * var(--ui-scale)) solid transparent;
+}
+
+.toggle-right {
+    right: 0;
+    bottom: 0;
+    width: 0; 
+    height: 0; 
+    border-bottom: calc(12px * var(--ui-scale)) solid #ff0000;
+    border-left: calc(12px * var(--ui-scale)) solid transparent;
+}
+
+.ui-toggle.ui-hidden {
+    transform: rotate(180deg);
+}
+
+.ui-toggle.toggle-offscreen {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+body.hide-cursor, body.hide-cursor * {
+    cursor: none !important;
+}
+
+/* EEG Control Panel (Top-Right) */
+.toggle-top-right {
+    right: 0;
+    top: 0;
+    width: 0; 
+    height: 0; 
+    border-top: calc(12px * var(--ui-scale)) solid #ff0000;
+    border-left: calc(12px * var(--ui-scale)) solid transparent;
+}
+
+#eegPanel {
+    position: fixed;
+    top: calc(15px * var(--ui-scale));
+    right: calc(20px * var(--ui-scale));
+    width: calc(260px * var(--ui-scale));
+    background-color: rgba(0, 0, 0, 0.92);
+    border: calc(1px * var(--ui-scale)) solid rgba(255, 0, 0, 0.25);
+    border-radius: calc(6px * var(--ui-scale));
+    padding: calc(12px * var(--ui-scale));
+    font-family: 'Inter', sans-serif;
+    color: rgba(255, 0, 0, 0.55);
+    z-index: 10;
+    transition: opacity 0.3s ease;
+    box-shadow: 0 0 calc(15px * var(--ui-scale)) rgba(255, 0, 0, 0.08);
+    backdrop-filter: blur(10px);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: calc(1px * var(--ui-scale)) solid rgba(255, 0, 0, 0.2);
+    padding-bottom: calc(8px * var(--ui-scale));
+    margin-bottom: calc(10px * var(--ui-scale));
+    font-weight: 600;
+    font-size: calc(11px * var(--ui-scale));
+    letter-spacing: 0.5px;
+    color: rgba(255, 0, 0, 0.55);
+    white-space: nowrap;
+}
+
+#eegStatus {
+    font-size: calc(10px * var(--ui-scale));
+    font-weight: bold;
+    padding: calc(2px * var(--ui-scale)) calc(6px * var(--ui-scale));
+    border-radius: calc(3px * var(--ui-scale));
+}
+
+.status-offline {
+    color: rgba(255, 0, 0, 0.4);
+    background-color: rgba(255, 0, 0, 0.06);
+    border: calc(1px * var(--ui-scale)) solid rgba(255, 0, 0, 0.2);
+}
+
+.status-connecting {
+    color: rgba(255, 0, 0, 0.65);
+    background-color: rgba(255, 0, 0, 0.1);
+    border: calc(1px * var(--ui-scale)) solid rgba(255, 0, 0, 0.3);
+}
+
+.status-online {
+    color: #ff3333;
+    background-color: rgba(255, 0, 0, 0.12);
+    border: calc(1px * var(--ui-scale)) solid rgba(255, 0, 0, 0.4);
+}
+
+.control-row {
+    margin-bottom: calc(10px * var(--ui-scale));
+}
+
+.switch-container {
+    display: flex;
+    align-items: center;
+    gap: calc(8px * var(--ui-scale));
+    cursor: pointer;
+    user-select: none;
+}
+
+#eegModeToggle,
+#waveformViewToggle {
+    appearance: none;
+    -webkit-appearance: none;
+    width: calc(16px * var(--ui-scale));
+    height: calc(16px * var(--ui-scale));
+    border: calc(2px * var(--ui-scale)) solid rgba(255, 0, 0, 0.55);
+    border-radius: calc(3px * var(--ui-scale));
+    background-color: #000;
+    cursor: pointer;
+    position: relative;
+    outline: none;
+    margin: 0;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+#eegModeToggle:checked,
+#waveformViewToggle:checked {
+    border-color: #ff3333;
+    background-color: #ff3333;
+}
+
+#eegModeToggle:checked::after,
+#waveformViewToggle:checked::after {
+    content: '';
+    position: absolute;
+    width: calc(4px * var(--ui-scale));
+    height: calc(8px * var(--ui-scale));
+    border: solid black;
+    border-width: 0 calc(2px * var(--ui-scale)) calc(2px * var(--ui-scale)) 0;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.switch-label {
+    font-size: calc(12px * var(--ui-scale));
+    font-weight: 600;
+    color: rgba(255, 0, 0, 0.55);
+    transition: color 0.2s ease;
+    white-space: nowrap;
+}
+
+#eegModeToggle:checked + .switch-label,
+#waveformViewToggle:checked + .switch-label {
+    color: #ff3333;
+}
+
+.calibration-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: calc(12px * var(--ui-scale));
+    gap: calc(10px * var(--ui-scale));
+}
+
+#calibrateBtn {
+    flex-grow: 1;
+    background: transparent;
+    border: calc(1px * var(--ui-scale)) solid rgba(255, 0, 0, 0.4);
+    color: #ff3333;
+    font-weight: bold;
+    font-family: inherit;
+    font-size: calc(11px * var(--ui-scale));
+    padding: calc(6px * var(--ui-scale)) calc(12px * var(--ui-scale));
+    cursor: pointer;
+    border-radius: calc(3px * var(--ui-scale));
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+#calibrateBtn:disabled {
+    border-color: rgba(255, 0, 0, 0.15);
+    color: rgba(255, 0, 0, 0.25);
+    cursor: not-allowed;
+}
+
+#calibrateBtn:not(:disabled):hover {
+    background-color: rgba(255, 51, 51, 0.1);
+    box-shadow: 0 0 calc(8px * var(--ui-scale)) rgba(255, 51, 51, 0.2);
+}
+
+#calibrateBtn.calibrating {
+    background-color: rgba(255, 170, 0, 0.15);
+    border-color: #ffaa00;
+    color: #ffaa00;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.8; }
+    50% { opacity: 1; }
+    100% { opacity: 0.8; }
+}
+
+#calibrationTimer {
+    font-size: calc(11px * var(--ui-scale));
+    font-weight: bold;
+    color: #ffaa00;
+    min-width: calc(28px * var(--ui-scale));
+    text-align: right;
+}
+
+.timer-hidden {
+    display: none;
+}
+
+.metrics-grid {
+    display: flex;
+    flex-direction: column;
+    gap: calc(6px * var(--ui-scale));
+    margin-bottom: calc(12px * var(--ui-scale));
+}
+
+.metric-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: calc(8px * var(--ui-scale));
+}
+
+.metric-label {
+    font-size: calc(10px * var(--ui-scale));
+    font-weight: bold;
+    width: calc(65px * var(--ui-scale));
+    color: rgba(255, 0, 0, 0.55);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.bar-container {
+    flex-grow: 1;
+    height: calc(6px * var(--ui-scale));
+    background-color: rgba(255, 0, 0, 0.08);
+    border-radius: 0;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 0;
+    transition: width 0.1s linear;
+    background: #ff3333;
+    box-shadow: 0 0 calc(8px * var(--ui-scale)) rgba(255, 51, 51, 0.5);
+}
+
+.metric-val {
+    font-size: calc(10px * var(--ui-scale));
+    font-weight: bold;
+    width: calc(32px * var(--ui-scale));
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: #ff3333;
+}
+
+.panel-footer {
+    display: flex;
+    justify-content: space-between;
+    border-top: calc(1px * var(--ui-scale)) solid rgba(255, 0, 0, 0.2);
+    padding-top: calc(8px * var(--ui-scale));
+    font-size: calc(11px * var(--ui-scale));
+    color: rgba(255, 0, 0, 0.55);
+    white-space: nowrap;
+}
+
+.footer-val span {
+    font-weight: bold;
+    color: #ff3333;
+}
+
+/* ── Waveform Overlay Canvas ──────────────────────────────────── */
+#waveformCanvas {
+    display: block;
+    border-radius: 8px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    z-index: 5;
+}
+
+#waveformCanvas.waveform-visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ── Panel header right cluster ──────────────────────────────── */
+.panel-header-right {
+    display: flex;
+    align-items: center;
+    gap: calc(8px * var(--ui-scale));
+}
+
+/* ── Device Section (Integrated Panel Component) ─────────────── */
+.device-section {
+    border: calc(1px * var(--ui-scale)) solid rgba(255, 0, 0, 0.15);
+    border-radius: calc(6px * var(--ui-scale));
+    background: rgba(255, 0, 0, 0.02);
+    padding: calc(10px * var(--ui-scale));
+    margin-bottom: calc(12px * var(--ui-scale));
+}
+
+.device-section-title {
+    font-family: 'Inter', sans-serif;
+    font-size: calc(9px * var(--ui-scale));
+    font-weight: 700;
+    color: rgba(255, 0, 0, 0.5);
+    letter-spacing: 1px;
+    margin-bottom: calc(8px * var(--ui-scale));
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+/* Scan row */
+.device-scan-row {
+    display: flex;
+    align-items: center;
+    gap: calc(8px * var(--ui-scale));
+    margin-bottom: calc(8px * var(--ui-scale));
+}
+
+.device-scan-btn {
+    background: transparent;
+    border: calc(1px * var(--ui-scale)) solid rgba(255, 0, 0, 0.4);
+    color: #ff3333;
+    font-family: 'Inter', sans-serif;
+    font-size: calc(10px * var(--ui-scale));
+    font-weight: 700;
+    padding: calc(4px * var(--ui-scale)) calc(10px * var(--ui-scale));
+    border-radius: calc(3px * var(--ui-scale));
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+.device-scan-btn:hover:not(:disabled) {
+    background: rgba(255, 0, 0, 0.1);
+    box-shadow: 0 0 8px rgba(255, 0, 0, 0.2);
+}
+.device-scan-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+
+.scan-status-text {
+    font-size: calc(10px * var(--ui-scale));
+    color: rgba(255, 0, 0, 0.4);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.2s ease;
+}
+.scan-status-text.status-error {
+    color: #ff4444;
+}
+.scan-status-text.status-success {
+    color: #00ff99;
+}
+.scan-status-text.status-warning {
+    color: #ffaa00;
+}
+.scan-status-text.status-info {
+    color: #00ccff;
+}
+
+/* Device list */
+.device-list {
+    display: flex;
+    flex-direction: column;
+    gap: calc(5px * var(--ui-scale));
+    min-height: calc(110px * var(--ui-scale));
+    max-height: calc(110px * var(--ui-scale));
+    overflow-y: auto;
+    margin-bottom: calc(8px * var(--ui-scale));
+}
+.device-list::-webkit-scrollbar { width: 3px; }
+.device-list::-webkit-scrollbar-track { background: rgba(255,0,0,0.04); }
+.device-list::-webkit-scrollbar-thumb { background: rgba(255,0,0,0.2); border-radius: 2px; }
+
+.device-list-empty {
+    font-size: calc(10px * var(--ui-scale));
+    color: rgba(255, 0, 0, 0.65);
+    text-align: center;
+    padding: calc(12px * var(--ui-scale)) 0;
+}
+
+.device-list-searching {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(11px * var(--ui-scale));
+    font-weight: 600;
+    color: rgba(255, 0, 0, 0.55);
+    letter-spacing: 0.5px;
+}
+
+/* Device card */
+.device-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: calc(5px * var(--ui-scale)) calc(7px * var(--ui-scale));
+    border: calc(1px * var(--ui-scale)) solid rgba(255, 0, 0, 0.12);
+    border-radius: calc(4px * var(--ui-scale));
+    background: rgba(255, 0, 0, 0.01);
+    gap: calc(8px * var(--ui-scale));
+    transition: border-color 0.2s, background 0.2s;
+}
+.device-card:hover {
+    border-color: rgba(255, 0, 0, 0.3);
+    background: rgba(255, 0, 0, 0.04);
+}
+.device-card.connected-device {
+    border-color: rgba(255, 0, 0, 0.4);
+    background: rgba(255, 0, 0, 0.06);
+}
+
+.device-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    flex: 1;
+    min-width: 0;
+}
+.device-card-name {
+    font-size: calc(10px * var(--ui-scale));
+    font-weight: 600;
+    color: rgba(255, 60, 60, 0.85);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.device-card-address {
+    font-size: calc(8px * var(--ui-scale));
+    color: rgba(255, 0, 0, 0.3);
+    font-variant-numeric: tabular-nums;
+}
+
+.device-connect-btn {
+    flex-shrink: 0;
+    background: transparent;
+    border: calc(1px * var(--ui-scale)) solid rgba(255, 0, 0, 0.3);
+    color: #ff3333;
+    font-family: 'Inter', sans-serif;
+    font-size: calc(9px * var(--ui-scale));
+    font-weight: 700;
+    padding: calc(2px * var(--ui-scale)) calc(7px * var(--ui-scale));
+    border-radius: calc(3px * var(--ui-scale));
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+.device-connect-btn:hover:not(:disabled) {
+    background: rgba(255, 0, 0, 0.1);
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.2);
+}
+.device-connect-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+.device-connect-btn.connecting {
+    border-color: rgba(255, 0, 0, 0.4);
+    color: #ff3333;
+    animation: pulse 1.2s infinite;
+}
+.device-connect-btn.disconnect-mode {
+    border-color: rgba(255, 0, 0, 0.25);
+    color: rgba(255, 60, 60, 0.6);
+}
+.device-connect-btn.disconnect-mode:hover:not(:disabled) {
+    background: rgba(255, 0, 0, 0.08);
+    color: #ff3333;
+}
+
+/* ── Training Section ────────────────────────────────────────── */
+.training-section {
+    border: calc(1px * var(--ui-scale)) solid rgba(255, 0, 0, 0.15);
+    border-radius: calc(6px * var(--ui-scale));
+    background: rgba(255, 0, 0, 0.02);
+    padding: calc(10px * var(--ui-scale));
+    margin-bottom: calc(12px * var(--ui-scale));
+}
+
+.protocol-select {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    border: calc(1px * var(--ui-scale)) solid rgba(255, 0, 0, 0.3);
+    color: #ff3333;
+    font-family: 'Inter', sans-serif;
+    font-size: calc(11px * var(--ui-scale));
+    padding: calc(4px * var(--ui-scale)) calc(8px * var(--ui-scale));
+    border-radius: calc(3px * var(--ui-scale));
+    margin-bottom: calc(10px * var(--ui-scale));
+    outline: none;
+    cursor: pointer;
+}
+
+.protocol-select:focus {
+    border-color: #ff3333;
+    box-shadow: 0 0 calc(5px * var(--ui-scale)) rgba(255, 0, 0, 0.3);
+}
+
+.protocol-select option {
+    background: #000;
+    color: #ff3333;
+}
+
+.coherence-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: calc(8px * var(--ui-scale));
+}
+
+.coherence-fill {
+    background: #ff44ff; /* Purple/magenta to distinguish from default red */
+    box-shadow: 0 0 calc(8px * var(--ui-scale)) rgba(255, 68, 255, 0.5);
+}

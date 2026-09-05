@@ -1,0 +1,14 @@
+name: muse_env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.12
+  - numpy
+  - scipy
+  - pip
+  - pip:
+    - pylsl
+    - websockets
+    - muselsl
+    - bleak

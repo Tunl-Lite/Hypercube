@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hypercube Plotter</title>
+    <meta name="description" content="A web-based hypercube plotter animation.">
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="index.css?v=29">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="canvas-container">
+        <div id="eegIndicator">
+            <div class="eeg-band" data-band="Delta">
+                <span class="marker">▶</span>
+                <span class="symbol">δ</span>
+                <span class="range">0.5–4 Hz</span>
+            </div>
+            <div class="eeg-band" data-band="Theta">
+                <span class="marker">▶</span>
+                <span class="symbol">θ</span>
+                <span class="range">4–8 Hz</span>
+            </div>
+            <div class="eeg-band" data-band="Alpha">
+                <span class="marker">▶</span>
+                <span class="symbol">α</span>
+                <span class="range">8–13 Hz</span>
+            </div>
+            <div class="eeg-band" data-band="Beta">
+                <span class="marker">▶</span>
+                <span class="symbol">β</span>
+                <span class="range">13–30 Hz</span>
+            </div>
+            <div class="eeg-band" data-band="Gamma">
+                <span class="marker">▶</span>
+                <span class="symbol">γ</span>
+                <span class="range">30–45 Hz</span>
+            </div>
+        </div>
+        <div id="angleDisplay">0.0°</div>
+        <canvas id="plotterCanvas" width="1200" height="1200"></canvas>
+        <canvas id="waveformCanvas"></canvas>
+
+        <div id="audioControl">
+            <input type="checkbox" id="audioToggle" autocomplete="off">
+            <label for="audioToggle">Audio</label>
+        </div>
+        <div id="frequencyDisplay">Audio: Off</div>
+        <div id="eegPanel" class="fade-out">
+            <!-- Top header row: always visible -->
+            <div class="panel-header">
+                <span>EEG Interface</span>
+                <div class="panel-header-right">
+                    <span id="eegStatus" class="status-offline">OFFLINE</span>
+                </div>
+            </div>
+            <div class="panel-body">
+                <!-- Device Setup (Permanently integrated section) -->
+                <div class="device-section">
+                    <div class="device-section-title">DEVICE SETUP</div>
+                    <div class="device-scan-row">
+                        <button id="scanBtn" class="device-scan-btn">Scan</button>
+                        <span id="scanStatusText" class="scan-status-text">Ready to scan.</span>
+                    </div>
+                    <div id="deviceList" class="device-list">
+                        <div class="device-list-empty">Press Scan to find Muse headsets.</div>
+                    </div>
+                </div>
+
+                <div class="control-row">
+                    <label class="switch-container">
+                        <input type="checkbox" id="eegModeToggle" autocomplete="off">
+                        <span class="switch-label">Live EEG Mode</span>
+                    </label>
+                </div>
+                <div class="control-row">
+                    <label class="switch-container">
+                        <input type="checkbox" id="waveformViewToggle" autocomplete="off">
+                        <span class="switch-label">EEG Data View</span>
+                    </label>
+                </div>
+                
+                <div class="training-section">
+                    <div class="device-section-title">TRAINING PROTOCOLS</div>
+                    <select id="trainingProtocolSelect" class="protocol-select">
+                        <option value="none">None (Reactive Mode)</option>
+                        <option value="hypnagogic">Hypnagogic (6.0 Hz)</option>
+                        <option value="esp">ESP / Insight (40.0 Hz)</option>
+                    </select>
+                    <div class="coherence-row">
+                        <span class="metric-label">Coherence</span>
+                        <div class="bar-container">
+                            <div id="bar-coherence" class="bar-fill coherence-fill"></div>
+                        </div>
+                        <span id="val-coherence" class="metric-val">0%</span>
+                    </div>
+                </div>
+
+                <div class="calibration-section">
+                    <button id="calibrateBtn" disabled>Calibrate Baseline</button>
+                    <div id="calibrationTimer" class="timer-hidden">30s</div>
+                </div>
+                <div class="metrics-grid">
+                    <div class="metric-row">
+                        <span class="metric-label">δ (Delta)</span>
+                        <div class="bar-container">
+                            <div id="bar-delta" class="bar-fill"></div>
+                        </div>
+                        <span id="val-delta" class="metric-val">0%</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">θ (Theta)</span>
+                        <div class="bar-container">
+                            <div id="bar-theta" class="bar-fill"></div>
+                        </div>
+                        <span id="val-theta" class="metric-val">0%</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">α (Alpha)</span>
+                        <div class="bar-container">
+                            <div id="bar-alpha" class="bar-fill"></div>
+                        </div>
+                        <span id="val-alpha" class="metric-val">0%</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">β (Beta)</span>
+                        <div class="bar-container">
+                            <div id="bar-beta" class="bar-fill"></div>
+                        </div>
+                        <span id="val-beta" class="metric-val">0%</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">γ (Gamma)</span>
+                        <div class="bar-container">
+                            <div id="bar-gamma" class="bar-fill"></div>
+                        </div>
+                        <span id="val-gamma" class="metric-val">0%</span>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="footer-val">Centroid: <span id="centroidVal">-- Hz</span></div>
+                    <div class="footer-val">Z-Score: <span id="zscoreVal">0.00</span></div>
+                </div>
+            </div>
+        </div>
+        <div id="uiToggleTopLeft" class="ui-toggle toggle-top-left"></div>
+        <div id="uiToggleTopRight" class="ui-toggle toggle-top-right"></div>
+        <div id="uiToggleLeft" class="ui-toggle toggle-left"></div>
+        <div id="uiToggleRight" class="ui-toggle toggle-right"></div>
+    </div>
+    <script src="script.js?v=22"></script>
+</body>
+
+</html>
