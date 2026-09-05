@@ -44,18 +44,18 @@ When $I$ is an aliquot part of $360^\circ$ (or an irreducible fraction $360^\cir
 
 - **$I = 120^\circ \left(\frac{360^\circ}{3}\right) \rightarrow$ The Triad ($\Delta$)**: The minimum polygon capable of enclosing space. In Hermetic and Pythagorean philosophy, the triangle represents the synthesis of the thesis and antithesis, the prime archetype of active creation, illumination, and structural resolution.
 - **$I = 90^\circ \left(\frac{360^\circ}{4}\right) \rightarrow$ The Tetrad ($\square$)**: The fourfold foundation. Symbolizes the material realm, Cartesian spatiality, stability, and the four classical elements (*quadrivium*).
-- **$I = 60^\circ \left(\frac{360^\circ}{6}\right) \rightarrow$ The Hexad ($\hexagon$)**: Harmonic equilibrium, balance, and the hexagonal crystallization omnipresent in natural tessellations (from benzene rings to snowflake crystallography and the *Cube of Metatron*).
+- **$I = 60^\circ \left(\frac{360^\circ}{6}\right) \rightarrow$ The Hexad (⬡)**: Harmonic equilibrium, balance, and the hexagonal crystallization omnipresent in natural tessellations (from benzene rings to snowflake crystallography and the *Cube of Metatron*).
 - **$I = 45^\circ \left(\frac{360^\circ}{8}\right) \rightarrow$ The Octad**: The transitional geometry between the square (terrestrial earth) and the circle (celestial infinity), classical in sacred architecture as the dome squinch or baptismal font of rebirth.
 - **$I = 30^\circ \left(\frac{360^\circ}{12}\right) \rightarrow$ The Dodecagon**: The cosmic cycle, reflecting the twelvefold divisions of the ecliptic, the zodiac, and the sphere of harmonic completion.
 
 ### Star Polygons, Hypocycloids, and Continuous Churn
-When $\gcd(\operatorname{round}(I), 360) = 1$ and $I$ is non-integral, the chords generate complex intersecting star polygons $\{p/q\}$ and dense hypocycloidal webs. These non-terminating orbits mirror the dense, quasi-periodic trajectories of Hamiltonian dynamical systems, evoking the infinite, self-referential complexity of the cosmic loom.
+When $\gcd(\mathrm{round}(I), 360) = 1$ and $I$ is non-integral, the chords generate complex intersecting star polygons $\{p/q\}$ and dense hypocycloidal webs. These non-terminating orbits mirror the dense, quasi-periodic trajectories of Hamiltonian dynamical systems, evoking the infinite, self-referential complexity of the cosmic loom.
 
 ## 3. Harmonic Trail Closure and the Metaphysics of Time
 
 In physical spacetime, matter leaves irreversible entropy trails. In the Hypercube Plotter, form adheres to the metaphysics of the **Eternal Return** (*Apokatastasis*):
 
-$$\text{Steps to Closure} = \frac{360}{\gcd(\operatorname{round}(I), 360)} + 1$$
+$$\text{Steps to Closure} = \frac{360}{\gcd(\mathrm{round}(I), 360)} + 1$$
 
 - **Cyclic Conservation**: The visual buffer retains the exact number of edges required to complete the canonical polygon. Once closed, the shape is self-sustaining; further iteration produces complete redundancy.
 - **Asymmetric Temporal Decay**: When the intensity parameter $I$ shifts, the memory buffer expands and contracts along asymmetric lerp vectors ($\lambda_{\text{grow}} = 0.15, \lambda_{\text{shrink}} = 0.06$). The emergence of the new form is rapid, while the ghost of the previous geometry dissolves gradually, embodying the phenomenological retention and protention described in Husserlian time-consciousness.
