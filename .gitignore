@@ -65,6 +65,7 @@ recordings/
 *~
 *.sublime-project
 *.sublime-workspace
+.snapshots/
 
 # OS metadata
 # macOS
